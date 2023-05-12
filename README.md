@@ -8,3 +8,10 @@ HPVcompare_Example.R contains code with which an example scenario can be run:
 - It defines the example scenario
 - It computes the corresponding risk reductions by loading HPVcompare_RiskReductions.R
 - It runs the analysis by loading HPVcompare_Computation.R
+
+HPVcompare_Example.R
+HPVcompare_functions.R
+HPVcompare_RiskReduction_functions.R
+HPVcompare_ParametersData.R
+HPVcompare_RiskReductions.R
+HPVcompare_Computation.R
