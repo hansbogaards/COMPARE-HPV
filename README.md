@@ -9,6 +9,13 @@ HPVcompare_ParametersData.R \
 HPVcompare_RiskReductions.R \
 HPVcompare_Computation.R 
 
+# Data
+The Inc_ files contain cancer incidence data from the Netherlands Cancer Registry for the various cancer types \
+The Surv_ files contain cancer survival data from the Netherlands Cancer Registry for the various cancer types \
+The TablePop_ files contain overall survival data of the general population in 2020 from the Statistics Netherlands database \
+The Pop files contain data on the population size stratified by age group from the Statistics Netherlands database \
+The BirthsPer1000_ file contains data on the average number of births in the population (per age of the mother) from the Statistics Netherlands database
+
 # Example
 HPVcompare_Example.R contains code with which an example scenario can be run:
 - It first loads all the required functions by loading HPVcompare_functions.R and HPVcompare_RiskReduction_functions.R
