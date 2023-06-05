@@ -1,6 +1,5 @@
 #Anogenital warts (AW) incidence per age and gender
 
-
 #From RIVM raport sexually transmitted infections 2021 Table 7.1
 #We set the averages below and above 25 to these numbers:
 #women <25: 2.7, women >25: 2.1, men <25: 2.1, men >25: 3.5
@@ -87,7 +86,7 @@ AW.inc_m <- c(numeric(11),Inc1222_m,Inc23_m,Inc24_m,
               rep(0,16))
 
 #plots
-plot(1:100,AW.inc_m,type="l",col="#00B6EB",main="AW incidence per 1000 p-yrs",ylim=c(0,12),
+plot(1:100,AW.inc_m,type="l",col="#00B6EB",main="AW episodes per 1000 p-yrs",ylim=c(0,12),
      ylab="",xlab="age")
 lines(AW.inc_w,type="l",col="#F8766D")
 legend('topright', legend=c("Women", "Men"),
