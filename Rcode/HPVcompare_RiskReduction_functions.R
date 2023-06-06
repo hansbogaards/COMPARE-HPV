@@ -1,18 +1,23 @@
 ###########################################################################################################
 RiskReductions <- function(scenario){
-  #Sets the type-specific and age-dependent relative risk reduction 
+  #Sets the type-specific and age-dependent relative risk reductions 
   #according to a given scenario and for the different vaccines
-  #For each vaccin and gender (women, men and MSM), 
+  #For each vaccine and gender (women, men and MSM), 
   #RRR is a matrix of size 9x100
   #Rows correspond to HPV types (hr) and columns to ages 1:100
   
-  #scenario = (scenario_HR, scenario_LR)
+  #scenario = (scenario_HR, scenario_LR,AW/RRP)
   #scenario_HR =  1: direct protection only
-  #               2: + herd immunity
-  #               3: + waning
-  #scenario_LR =  0: no protection (so no warts and no RRP)
-  #               1: direct protection only
+  #               2: + herd immunity (base-case)
+  #               3: + waning for all non16/18
+  #               4: + waning for all non targeted types (cross-protection)
+  #scenario_LR =  1: Base-case: protection equal to mean effect of type 18 = 0.84
   #               2: elimination
+  #               3: direct protection only
+  #warts/RRP =    0: neither
+  #               1: include RRP only
+  #               2: include AW only
+  #               3: include both RRP and AW (base-case)
   
   sc_HR <- scenario[1]
   sc_LR <- scenario[2]
@@ -138,6 +143,7 @@ RiskReductions <- function(scenario){
     RRR_2vLib_MSM <- RRR_2vLib_m
     RRR_4v_MSM <- RRR_4v_m
     RRR_9v_MSM <- RRR_9v_m
+    
   } else if (sc_HR == 4){ 
     #scenario 3: All-or-nothing VE, waning, + herd immunity
     
@@ -228,6 +234,7 @@ RiskReductionScreening <- function(scenario,agegrps.scr){
     RRscreening_2v.lib <- RRR_2v.lib_w[,agegrps.scr]
     RRscreening_4v <- RRR_4v_w[,agegrps.scr]
     RRscreening_9v <- RRR_9v_w[,agegrps.scr]
+    
   } else if (sc_HR == 2){ 
     #scenario 2: All-or-nothing VE, life-long, + herd immunity
     
@@ -267,8 +274,9 @@ RiskReductionScreening <- function(scenario,agegrps.scr){
     RRscreening_2v.lib[c(1:7),] <- RRRprev_w[c(1,2,4,7,9,11,13),agegrps.scr]
     RRscreening_4v <- RRscreening_2v.cons
     RRscreening_9v[c(1,2,3,4,6,8,9),] <- RRRprev_w[c(1,2,5,8,12,14,15),agegrps.scr]
+    
   } else if (sc_HR == 4){ 
-    #scenario 3: All-or-nothing VE, waning, + herd immunity
+    #scenario 4: All-or-nothing VE, waning, + herd immunity
     
     #Relative risk reductions
     RRRprev_w <- (HPVprev_pre_f_set - HPVprev_post_f)/HPVprev_pre_f_set
@@ -300,88 +308,6 @@ RiskReductionScreening <- function(scenario,agegrps.scr){
               RR_2v.lib=RRscreening_2v.lib,RR_4v=RRscreening_4v,
               RR_9v=RRscreening_9v))
 }
-
-#CumSumScreening <- function(HPVinc_matrix,agegrps.scr){
-#  #Computes cumulative HPVinc corresponding to screening intervals  
-#  cumsum_matrix <- t(apply(HPVinc_matrix,1,cumsum))
-#  cumsum_screening <- cumsum_matrix[,agegrps.scr] - cumsum_matrix[,c(1,agegrps.scr[-7])]
-#  return(cumsum_screening)
-#}
-
-#RiskReductionScreening <- function(scenario,agegrps.scr){
-#  #Compute cumulative risk reductions for screening
-#  sc_HR <- scenario[1]
-#  
-#  if (sc_HR == 1){ 
-#    #scenario 1: All-or-nothing VE, life-long, no herd immunity
-#    #Risk reductions are the same
-#    
-#    CRRscreening_2v.cons <- RRR_2v.cons_w[,agegrps.scr]
-#    CRRscreening_2v.mid <- RRR_2v.mid_w[,agegrps.scr]
-#    CRRscreening_2v.lib <- RRR_2v.lib_w[,agegrps.scr]
-#    CRRscreening_4v <- RRR_4v_w[,agegrps.scr]
-#    CRRscreening_9v <- RRR_9v_w[,agegrps.scr]
-#  } else if (sc_HR == 2){ 
-#    #scenario 2: All-or-nothing VE, life-long, + herd immunity
-#    
-#    CRRscreening <- (CumSumScreening(HPVinc_pre_f_set,agegrps.scr) - 
-#      CumSumScreening(HPVinc_post_f,agegrps.scr))/CumSumScreening(HPVinc_pre_f_set,agegrps.scr)
-#    CRRscreening[is.na(CRRscreening)] <- 0
-#    
-#    #matrices for the different vaccines
-#    CRRscreening_2v.cons <- matrix(0,types,7)
-#    CRRscreening_2v.mid <- matrix(0,types,7)
-#    CRRscreening_2v.lib <- matrix(0,types,7)
-#    CRRscreening_9v <- matrix(0,types,7)
-#    
-#    #plugging in the correct RRRs
-#    CRRscreening_2v.cons[c(1,2),] <- CRRscreening[c(1,2),]
-#    CRRscreening_2v.mid[c(1,2,3,4,6),] <- CRRscreening[c(1,2,3,6,10),]
-#    CRRscreening_2v.lib[c(1:7),] <- CRRscreening[c(1,2,4,7,9,11,13),]
-#    CRRscreening_4v <- CRRscreening_2v.cons
-#    CRRscreening_9v[c(1,2,3,4,6,8,9),] <- CRRscreening[c(1,2,5,8,12,14,15),]
-#    
-#    #At age 30 we use risk reduction in HPV prevalence
-#    #HPVprev_RR30 <- (HPVprev_pre_f_set[,30] - HPVprev_post_f[,30])/HPVprev_pre_f_set[,30]
-#    #CRRscreening_2v.cons[c(1,2),1] <- HPVprev_RR30[c(1,2)]
-#    #CRRscreening_2v.mid[c(1,2,3,4,6),1] <- HPVprev_RR30[c(1,2,3,6,10)]
-#    #CRRscreening_2v.lib[c(1:7),1] <- HPVprev_RR30[c(1,2,4,7,9,11,13)]
-#    #CRRscreening_4v <- CRRscreening_2v.cons
-#    #CRRscreening_9v[c(1,2,3,4,6,8,9),1] <- HPVprev_RR30[c(1,2,5,8,12,14,15)]
-#
-#  } else if (sc_HR == 3){ 
-#    #scenario 3: All-or-nothing VE, waning, + herd immunity
-#    
-#    CRRscreening <- (CumSumScreening(HPVinc_pre_f_set,agegrps.scr) - 
-#                       CumSumScreening(HPVinc_post_f_waning015,agegrps.scr))/CumSumScreening(HPVinc_pre_f_set,agegrps.scr)
-#    CRRscreening[is.na(CRRscreening)] <- 0
-#    
-#    #matrices for the different vaccines
-#    CRRscreening_2v.cons <- matrix(0,types,7)
-#    CRRscreening_2v.mid <- matrix(0,types,7)
-#    CRRscreening_2v.lib <- matrix(0,types,7)
-#    CRRscreening_9v <- matrix(0,types,7)
-#    
-#    #plugging in the correct RRRs
-#    CRRscreening_2v.cons[c(1,2),] <- CRRscreening[c(1,2),]
-#    CRRscreening_2v.mid[c(1,2,3,4,6),] <- CRRscreening[c(1,2,3,6,10),]
-#    CRRscreening_2v.lib[c(1:7),] <- CRRscreening[c(1,2,4,7,9,11,13),]
-#    CRRscreening_4v <- CRRscreening_2v.cons
-#    CRRscreening_9v[c(1,2,3,4,6,8,9),] <- CRRscreening[c(1,2,5,8,12,14,15),]
-#    
-#    #At age 30 we use risk reduction in HPV prevalence
-#    #HPVprev_RR30 <- (HPVprev_pre_f_set[,30] - HPVprev_post_f_waning015[,30])/HPVprev_pre_f_set[,30]
-#    #CRRscreening_2v.cons[c(1,2),1] <- HPVprev_RR30[c(1,2)]
-#    #CRRscreening_2v.mid[c(1,2,3,4,6),1] <- HPVprev_RR30[c(1,2,3,6,10)]
-#    #CRRscreening_2v.lib[c(1:7),1] <- HPVprev_RR30[c(1,2,4,7,9,11,13)]
-#    #CRRscreening_4v <- CRRscreening_2v.cons
-#    #CRRscreening_9v[c(1,2,3,4,6,8,9),1] <- HPVprev_RR30[c(1,2,5,8,12,14,15)]
-#  }
-#    
-#  return(list(CRR_2v.cons=CRRscreening_2v.cons,CRR_2v.mid=CRRscreening_2v.mid,
-#              CRR_2v.lib=CRRscreening_2v.lib,CRR_4v=CRRscreening_4v,
-#              CRR_9v=CRRscreening_9v))
-#}
 
 ###########################################################################################################
 #Two functions that we need
