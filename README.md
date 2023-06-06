@@ -29,3 +29,4 @@ _HPVcompare_Example.R_ contains code with which an example scenario can be run:
 - It defines the example scenario
 - It computes the corresponding risk reductions by loading _HPVcompare_RiskReductions.R_
 - It runs the analysis by loading _HPVcompare_Computation.R_
+- Various results can be found in the list _Results_
