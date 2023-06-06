@@ -3,6 +3,7 @@ R-code to evaluate the cost-effectiveness profile of 9v vs 2v HPV vaccination in
 Used in _Projected health and economic effects of nonavalent versus bivalent HPV vaccination in the Netherlands: a data-driven analysis_ (link to paper).
 
 To run the code; save all the .R files in a main folder and save the folders _Data_ and _TransmissionModel_ (including its subfolders) in the main folder.
+Change your R working directory to the main folder. 
 
 # .R files
 _HPVcompare_functions.R_ \
