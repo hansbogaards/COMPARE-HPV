@@ -1,4 +1,4 @@
-#Functions needed in the ICER computation
+#Functions needed for the computation
 
 ###########################################################################################################
 
@@ -20,16 +20,6 @@ RRPExpected <- function(IncUnder18_RRP,IncAbove18_RRP,cost_RRP,QALY_RRP,S,gender
   RRPdiags_adults <- sum(pop.size_age)*IncAbove18_RRP/100000
   nr.RRPpatients_exp <- PAF.HPV_RRP*RRPdiags_adults*(age.distr_RRP[18:amax]/sum(age.distr_RRP[18:amax]))
 
-  #dmat_c <- matrix(0,amax-18+1,nrYears_RRP)
-  #dmat_h <- matrix(0,amax-18+1,nrYears_RRP)
-  #for (i in 1:nrYears_RRP){
-  #  dmat_c[1:(amax-18+1-i+1),i] <- dvec_c[(18-a0+i-1):(amax-a0)]*cost_RRP
-  #  dmat_h[1:(amax-18+1-i+1),i] <- dvec_h[(18-a0+i-1):(amax-a0)]*QALY_RRP
-  #}
-  
-  #costs.RRP_exp <- apply(matrix(rep(nr.RRP_exp,nrYears_RRP),amax-18+1,nrYears_RRP)*dmat_c,1,sum)
-  #QALYs.RRP_exp <- apply(matrix(rep(nr.RRP_exp,nrYears_RRP),amax-18+1,nrYears_RRP)*dmat_h,1,sum)
-  
   #Make big Exp_prob_matrix
   x <- 0:(amax-1)
   Exp_probs <- exp(-x/nrYearsAverage_RRP)
@@ -52,8 +42,6 @@ RRPExpected <- function(IncUnder18_RRP,IncAbove18_RRP,cost_RRP,QALY_RRP,S,gender
     nr.RRPchildpatients_exp <- sum(sum(nr.child_exp)*(0.5*surv_m[1:18,]/100000 + 0.5*surv_w[1:18,]/100000))*IncUnder18_RRP/100000
     nr.RRPchildpatients_exp_agemother <- nr.RRPchildpatients_exp*nr.child_exp/sum(nr.child_exp)
     
-    #Effect in + OnsetChildren_RRP year
-    
     Exp_prob_mat_children <- Exp_prob_mat[,1:17] #for ages 1-17
     nr.RRPchildpatients_exp_age <- nr.RRPchildpatients_exp*(age.distr_RRP[1:17]/sum(age.distr_RRP[1:17]))
     nr.RRPchild_exp <- apply(t(matrix(rep(nr.RRPchildpatients_exp_age,amax),17,amax))*Exp_prob_mat_children,1,sum)
@@ -75,15 +63,8 @@ RRPExpected <- function(IncUnder18_RRP,IncAbove18_RRP,cost_RRP,QALY_RRP,S,gender
     costs.RRPchild_exp <- apply(discount.age_matrix*cost.discount_matrix*cost_RRP,2,sum)
     QALYs.RRPchild_exp <- apply(discount.age_matrix*cost.discount_matrix*QALY_RRP,2,sum)
     
-    #costs.RRPchild_exp <- apply(matrix(rep(nr.RRPchild_exp_agemother,nrYears_RRP),49-16+1,nrYears_RRP)
-    #                            *dmat_c[(16+OnsetChildren_RRP-18+1):(49+OnsetChildren_RRP-18+1),],1,sum)
-    #QALYs.RRPchild_exp <- apply(matrix(rep(nr.RRPchild_exp_agemother,nrYears_RRP),49-16+1,nrYears_RRP)
-    #                            *dmat_h[(16+OnsetChildren_RRP-18+1):(49+OnsetChildren_RRP-18+1),],1,sum)
-    
     #age 16-99
     nr.RRPpatients_exp <- c(0,0,nr.RRPpatients_exp) + c(nr.RRPchildpatients_exp_agemother,numeric(50))
-    #costs.RRP_exp <- c(0,0,costs.RRP_exp) + c(numeric(OnsetChildren_RRP),costs.RRPchild_exp,numeric(50-OnsetChildren_RRP))
-    #QALYs.RRP_exp <- c(0,0,QALYs.RRP_exp) + c(numeric(OnsetChildren_RRP),QALYs.RRPchild_exp,numeric(50-OnsetChildren_RRP))
     costs.RRP_exp <- c(0,0,costs.RRP_exp) + c(costs.RRPchild_exp,numeric(50))
     QALYs.RRP_exp <- c(0,0,QALYs.RRP_exp) + c(QALYs.RRPchild_exp,numeric(50))
     
@@ -144,7 +125,7 @@ CancerExpected <- function(S,ca.risk,ca_survdata,AFs_types,costs_ca,PAF,HR){
   
   nr.cancers_exp <- cohort*(AFs_ca %*% t(ca.risk_grp*pr.surv_ca))
   
-  #Life-years lost (from age a0 till max(agemids)
+  #Life-years lost (from age a0 till max(agemids))
   Lifeyearslost <- LifeyearsLost(max(agemids.ca),S,ca_survdata,PAF,HR)
   LYs.loss_ca <- Lifeyearslost$lifey.loss_ca
   ca_survdata_new <- Lifeyearslost$ca_survdata_new
@@ -178,14 +159,10 @@ LifeyearsLost <- function(amax_ca,S,ca_survdata,PAF,HR){
   matrix <- cbind(rep(1,5),ca_survdata)
   ca_survdata_new <- matrix(sapply(matrix,Increased_Surv_HPV,alpha=PAF,HR=HR),5,11)
   
-  
   for (a in a0:amax_ca){
     surv.vec <- surv.age[a-a0+1,(a-a0+1):(amax-a0+1)] 
     
     #survival after cancer diagnosis (need to survive cancer AND other causes)
-    #if (a < 18){ #no cancer survival data available for <18, so set equal to 18-44
-      #surv.age_ca[a-a0+1,(a-a0+1):(amax-a0+1)] <- surv.vec
-    #} else if (a >= 18 & a <= 44){
     if (a <= 44){
       surv.vec_ca <- c(ca_survdata_new[1,],rep(ca_survdata_new[1,11],amax-a-10))
       surv.age_ca[a-a0+1,(a-a0+1):(amax-a0+1)] <- surv.vec*surv.vec_ca
