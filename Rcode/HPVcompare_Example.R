@@ -20,3 +20,8 @@ source('HPVcompare_ParametersData.R')
 scenario <- c(2,1,3)
 source('HPVcompare_RiskReductions.R')
 source('HPVcompare_Computation.R')
+
+#ICER 9v vs 2v with 95% credible interval
+round(median(Results$ICERs$'9v_vs_2v.mid'))
+round(quantile(Results$ICERs$'9v_vs_2v.mid',0.025))
+round(quantile(Results$ICERs$'9v_vs_2v.mid',0.975))
