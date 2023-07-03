@@ -156,8 +156,8 @@ LifeyearsLost <- function(amax_ca,S,ca_survdata,PAF,HR){
   surv.age_ca <- matrix(0,amax_ca-a0+1,amax-a0+1)
   
   #Increased survival for HPV+ cancer
-  matrix <- cbind(rep(1,5),ca_survdata)
-  ca_survdata_new <- matrix(sapply(matrix,Increased_Surv_HPV,alpha=PAF,HR=HR),5,11)
+  ca_survdata1 <- cbind(rep(1,5),ca_survdata)
+  ca_survdata_new <- matrix(sapply(ca_survdata1,Increased_Surv_HPV,alpha=PAF,HR=HR),5,11)
   
   for (a in a0:amax_ca){
     surv.vec <- surv.age[a-a0+1,(a-a0+1):(amax-a0+1)] 

@@ -104,7 +104,7 @@ PrevAbove18_RRP_sim <- rpois(nr.sim,lambda=2)
 nrYearsAverage_RRP <- 10
 
 #costs indexed from 2019 --> 2022 (121.43/106.16 = *1.144)
-cost_RRP <- 2088*1.144 #Yearly cost per RRP patient
+cost_RRP <- 2083*1.144 #Yearly cost per RRP patient
 QALY_RRPlifetime <- 0 #life time QALY loss. Base-case LYs only
 #QALY_RRPlifetime <- 1.05
 QALY_RRP <- QALY_RRPlifetime/nrYearsAverage_RRP #Yearly QALY loss
@@ -180,9 +180,9 @@ AFs_CIN2plus_age2_sim <- rdirichlet(nr.sim, (alpha_dirichlet+n_CIN2plus_age2))[,
 pop_w <- read.table("Data/PopWomen_Agegrp.txt",header=T)
 pop_m <- read.table("Data/PopMen_Agegrp.txt",header=T)
 
-#Total population over years 2015-2019
-pop2015.2019_w <- as.numeric(apply(pop_w[6:10,agegrps.ca + 2],2,sum)) #last group only age 85-89
-pop2015.2019_m <- as.numeric(apply(pop_m[6:10,agegrps.ca + 2],2,sum)) #last group only age 85-89
+#Mean population over years 2015-2019
+pop2015.2019_w <- as.numeric(apply(pop_w[6:10,agegrps.ca + 2],2,mean)) #last group only age 85-89
+pop2015.2019_m <- as.numeric(apply(pop_m[6:10,agegrps.ca + 2],2,mean)) #last group only age 85-89
 
 #Cancer incidence
 inc_cervix <- read.table("Data/Inc_Cervix.txt",header=T)
@@ -194,15 +194,15 @@ inc_vulva <- read.table("Data/Inc_Vulva.txt",header=T)
 inc_vagina <- read.table("Data/Inc_Vagina.txt",header=T)
 inc_penis <- read.table("Data/Inc_Penis.txt",header=T)
 
-#Total incidence over years 2015-2019
-inc2015.2019_cervix <- as.numeric(apply(inc_cervix[6:10,agegrps.ca + 2],2,sum))
-inc2015.2019_anus_w <- as.numeric(apply(inc_anus_w[6:10,agegrps.ca + 2],2,sum))
-inc2015.2019_anus_m <- as.numeric(apply(inc_anus_m[6:10,agegrps.ca + 2],2,sum))
-inc2015.2019_oroph_w <- as.numeric(apply(inc_oroph_w[6:10,agegrps.ca + 2],2,sum))
-inc2015.2019_oroph_m <- as.numeric(apply(inc_oroph_m[6:10,agegrps.ca + 2],2,sum))
-inc2015.2019_vulva <- as.numeric(apply(inc_vulva[6:10,agegrps.ca + 2],2,sum))
-inc2015.2019_vagina <- as.numeric(apply(inc_vagina[6:10,agegrps.ca + 2],2,sum))
-inc2015.2019_penis <- as.numeric(apply(inc_penis[6:10,agegrps.ca + 2],2,sum))
+#Mean incidence over years 2015-2019
+inc2015.2019_cervix <- as.numeric(apply(inc_cervix[6:10,agegrps.ca + 2],2,mean))
+inc2015.2019_anus_w <- as.numeric(apply(inc_anus_w[6:10,agegrps.ca + 2],2,mean))
+inc2015.2019_anus_m <- as.numeric(apply(inc_anus_m[6:10,agegrps.ca + 2],2,mean))
+inc2015.2019_oroph_w <- as.numeric(apply(inc_oroph_w[6:10,agegrps.ca + 2],2,mean))
+inc2015.2019_oroph_m <- as.numeric(apply(inc_oroph_m[6:10,agegrps.ca + 2],2,mean))
+inc2015.2019_vulva <- as.numeric(apply(inc_vulva[6:10,agegrps.ca + 2],2,mean))
+inc2015.2019_vagina <- as.numeric(apply(inc_vagina[6:10,agegrps.ca + 2],2,mean))
+inc2015.2019_penis <- as.numeric(apply(inc_penis[6:10,agegrps.ca + 2],2,mean))
 
 #Yearly risk of cancer diagnosis
 ca.risk_cervix_sim <- mapply(rbeta,shape1=inc2015.2019_cervix+0.5,shape2=pop2015.2019_w-inc2015.2019_cervix+0.5,SIMPLIFY = TRUE,MoreArgs=list(n=nr.sim))
