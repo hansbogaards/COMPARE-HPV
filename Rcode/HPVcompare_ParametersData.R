@@ -104,7 +104,7 @@ PrevAbove18_RRP_sim <- rpois(nr.sim,lambda=2)
 nrYearsAverage_RRP <- 10
 
 #costs indexed from 2019 --> 2022 (121.43/106.16 = *1.144)
-cost_RRP <- 2083*1.144 #Yearly cost per RRP patient
+cost_RRP <- 2579#2083*1.144 #Yearly cost per RRP patient
 QALY_RRPlifetime <- 0 #life time QALY loss. Base-case LYs only
 #QALY_RRPlifetime <- 1.05
 QALY_RRP <- QALY_RRPlifetime/nrYearsAverage_RRP #Yearly QALY loss
@@ -140,8 +140,8 @@ PPV_colpo_2v <- c(0.548,rep(0.403,6))
 PPV_colpo_2v.cp <- c(0.538,rep(0.384,6))
 PPV_colpo_9v <- c(0.356,rep(0.342,6))
 
-cost_CIN2 <- 1194 # costs from own adjusted computation
-cost_CIN3 <- 1481
+cost_CIN2 <- 1578#1194 # costs from own adjusted computation
+cost_CIN3 <- 1934#1481
 cost_CIN2plus <- 0.68*cost_CIN3 + 0.32*cost_CIN2
 QALY_CIN2plus <- 0 #Base-case LYs only
 #QALY_CIN2plus <- 0.03/12
