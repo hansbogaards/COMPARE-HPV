@@ -1,6 +1,6 @@
 # HPV-COMPARE
 R-code to evaluate the cost-effectiveness profile of 9v vs 2v HPV vaccination in the Netherlands. \
-Used in _Projected health and economic effects of nonavalent versus bivalent HPV vaccination in the Netherlands: a data-driven analysis_ (link to paper).
+Used in _Projected health and economic effects of nonavalent versus bivalent HPV vaccination in the Netherlands: a data-driven analysis_ ([link to paper](https://www.medrxiv.org/content/10.1101/2023.12.27.23300574v1)).
 
 # .R files
 _HPVcompare_functions.R_ \
